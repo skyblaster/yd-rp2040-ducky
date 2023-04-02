@@ -34,16 +34,10 @@ Install and have your USB Rubber Ducky working in less than 5 minutes.
 10. Copy `duckyinpython.py` as `code.py` in the root of the Raspberry Pi Pico, overwriting the previous file.  
      Linux: `cp duckyinpython.py </path/to/pico/code.py`
 
-11. Find a script [here](https://github.com/hak5/usbrubberducky-payloads) or [create your own one using Ducky Script](https://docs.hak5.org/hak5-usb-rubber-ducky/duckyscript-tm-quick-reference) and save it as `payload.dd` in the Pico.
+11. Find a script [here](https://github.com/hak5/usbrubberducky-payloads) or [create your own one using Ducky Script](https://docs.hak5.org/hak5-usb-rubber-ducky/duckyscript-tm-quick-reference) and save it as `payload0.txt` in the Pico.
 
-12. Be careful, if your device isn't in [setup mode](#setup-mode), the device will reboot and after half a second, the script will run.
+12. Press the USR or Rotary Encoder button (whichever is defined) to deploy payload
 
-### Setup mode
-
-To edit the payload, enter setup mode by connecting the pin 1 (`GP0`) to pin 3 (`GND`), this will stop the pico-ducky from injecting the payload in your own machine.
-The easiest way to so is by using a jumper wire between those pins as seen bellow.
-
-![Setup mode with a jumper](images/setup-mode.png)
 
 ### USB enable/disable mode
 
