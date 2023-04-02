@@ -20,11 +20,13 @@ import time
 import digitalio
 from digitalio import DigitalInOut, Pull
 from adafruit_debouncer import Debouncer
-from board import *
 import pwmio
 import asyncio
+import board
+import neopixel
 
-led = pwmio.PWMOut(LED, frequency=5000, duty_cycle=0)
+led = pwmio.PWMOut(board.LED, frequency=5000, duty_cycle=0)
+pixel = neopixel.NeoPixel(board.NEOPIXEL, 1)
 
 def led_pwm_up(led):
     for i in range(100):
@@ -124,7 +126,7 @@ kbd = Keyboard(usb_hid.devices)
 layout = KeyboardLayout(kbd)
 
 # turn off automatically reloading when files are written to the pico
-supervisor.disable_autoreload()
+#supervisor.disable_autoreload()
 
 # sleep at the start to allow the device to be recognized by the host computer
 time.sleep(.5)
@@ -132,24 +134,24 @@ time.sleep(.5)
 led_pwm_up(led)
 
 #init button
-button1_pin = DigitalInOut(GP22) # defaults to input
+button1_pin = DigitalInOut(board.GP22) # defaults to input
 button1_pin.pull = Pull.UP      # turn on internal pull-up resistor
 button1 =  Debouncer(button1_pin)
 
 #init payload selection switch
-payload1Pin = digitalio.DigitalInOut(GP4)
+payload1Pin = digitalio.DigitalInOut(board.GP4)
 payload1Pin.switch_to_input(pull=digitalio.Pull.UP)
-payload2Pin = digitalio.DigitalInOut(GP5)
+payload2Pin = digitalio.DigitalInOut(board.GP5)
 payload2Pin.switch_to_input(pull=digitalio.Pull.UP)
-payload3Pin = digitalio.DigitalInOut(GP10)
+payload3Pin = digitalio.DigitalInOut(board.GP10)
 payload3Pin.switch_to_input(pull=digitalio.Pull.UP)
-payload4Pin = digitalio.DigitalInOut(GP11)
+payload4Pin = digitalio.DigitalInOut(board.GP11)
 payload4Pin.switch_to_input(pull=digitalio.Pull.UP)
 
 def getProgrammingStatus():
     # check GP0 for setup mode
     # see setup mode for instructions
-    progStatusPin = digitalio.DigitalInOut(GP0)
+    progStatusPin = digitalio.DigitalInOut(board.GP0)
     progStatusPin.switch_to_input(pull=digitalio.Pull.UP)
     progStatus = not progStatusPin.value
     return(progStatus)
