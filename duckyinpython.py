@@ -14,8 +14,6 @@ from adafruit_hid.keycode import Keycode
 #from keyboard_layout_win_LANG import KeyboardLayout
 #from keycode_win_LANG import Keycode
 
-import supervisor
-
 import time
 import digitalio
 from digitalio import DigitalInOut, Pull
@@ -24,9 +22,22 @@ import pwmio
 import asyncio
 import board
 import neopixel
+import rotaryio
 
 led = pwmio.PWMOut(board.LED, frequency=5000, duty_cycle=0)
-pixel = neopixel.NeoPixel(board.NEOPIXEL, 1)
+pixel = neopixel.NeoPixel(board.NEOPIXEL, 1, brightness=0.3)
+encoder = rotaryio.IncrementalEncoder(board.GP10, board.GP11)
+
+#Neopixel colours
+RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
+GREEN = (0, 255, 0)
+CYAN = (0, 255, 255)
+BLUE = (0, 0, 255)
+PURPLE = (180, 0, 255)
+WHITE = (255, 255, 255)
+ORANGE = (255, 128, 0)
+OFF = (0, 0, 0)
 
 def led_pwm_up(led):
     for i in range(100):
@@ -125,37 +136,16 @@ def parseLine(line):
 kbd = Keyboard(usb_hid.devices)
 layout = KeyboardLayout(kbd)
 
-# turn off automatically reloading when files are written to the pico
-#supervisor.disable_autoreload()
-
 # sleep at the start to allow the device to be recognized by the host computer
 time.sleep(.5)
 
 led_pwm_up(led)
 
 #init button
-button1_pin = DigitalInOut(board.GP22) # defaults to input
+#Switched to using the Rotary Encoder push button. If the board USR button is preferred, then change it back to board.BUTTON
+button1_pin = DigitalInOut(board.GP12) # defaults to input
 button1_pin.pull = Pull.UP      # turn on internal pull-up resistor
 button1 =  Debouncer(button1_pin)
-
-#init payload selection switch
-payload1Pin = digitalio.DigitalInOut(board.GP4)
-payload1Pin.switch_to_input(pull=digitalio.Pull.UP)
-payload2Pin = digitalio.DigitalInOut(board.GP5)
-payload2Pin.switch_to_input(pull=digitalio.Pull.UP)
-payload3Pin = digitalio.DigitalInOut(board.GP10)
-payload3Pin.switch_to_input(pull=digitalio.Pull.UP)
-payload4Pin = digitalio.DigitalInOut(board.GP11)
-payload4Pin.switch_to_input(pull=digitalio.Pull.UP)
-
-def getProgrammingStatus():
-    # check GP0 for setup mode
-    # see setup mode for instructions
-    progStatusPin = digitalio.DigitalInOut(board.GP0)
-    progStatusPin.switch_to_input(pull=digitalio.Pull.UP)
-    progStatus = not progStatusPin.value
-    return(progStatus)
-
 
 defaultDelay = 0
 
@@ -180,48 +170,13 @@ def runScript(file):
     except OSError as e:
         print("Unable to open file ", file)
 
-def selectPayload():
-    global payload1Pin, payload2Pin, payload3Pin, payload4Pin
-    payload = "payload.dd"
-    # check switch status
-    # payload1 = GPIO4 to GND
-    # payload2 = GPIO5 to GND
-    # payload3 = GPIO10 to GND
-    # payload4 = GPIO11 to GND
-    payload1State = not payload1Pin.value
-    payload2State = not payload2Pin.value
-    payload3State = not payload3Pin.value
-    payload4State = not payload4Pin.value
-
-
-    if(payload1State == True):
-        payload = "payload.dd"
-
-    elif(payload2State == True):
-        payload = "payload2.dd"
-
-    elif(payload3State == True):
-        payload = "payload3.dd"
-
-    elif(payload4State == True):
-        payload = "payload4.dd"
-
-    else:
-        # if all pins are high, then no switch is present
-        # default to payload1
-        payload = "payload.dd"
-
-
-    return payload
-
-
 async def blink_pico_led(led):
     print("starting blink_pico_led")
     led_state = False
     while True:
         if led_state:
             #led_pwm_up(led)
-            print("led up")
+            #print("led up")
             for i in range(100):
                 # PWM LED up and down
                 if i < 50:
@@ -230,7 +185,7 @@ async def blink_pico_led(led):
             led_state = False
         else:
             #led_pwm_down(led)
-            print("led down")
+            #print("led down")
             for i in range(100):
                 # PWM LED up and down
                 if i >= 50:
@@ -241,9 +196,41 @@ async def blink_pico_led(led):
 
 async def monitor_buttons(button1):
     global inBlinkeyMode, inMenu, enableRandomBeep, enableSirenMode,pixel
+    payload = "payload0.txt"
     print("starting monitor_buttons")
     button1Down = False
     while True:
+        position = encoder.position
+        last_position = None
+        if last_position is None or position != last_position:
+            #print(position)
+            pass
+        last_position = position
+        if position <= 0:
+            pixel.fill(BLUE)
+            payload = "payload0.txt"
+        if position == 1:
+            pixel.fill(GREEN)
+            payload = "payload1.txt"
+        if position == 2:
+            pixel.fill(RED)
+            payload = "payload2.txt"
+        if position == 3:
+            pixel.fill(YELLOW)
+            payload = "payload3.txt"
+        if position == 4:
+            pixel.fill(WHITE)
+            payload = "payload4.txt"
+        if position == 5:
+            pixel.fill(PURPLE)
+            payload = "payload5.txt"
+        if position == 6:
+            pixel.fill(CYAN)
+            payload = "payload6.txt"
+        if position >= 7:
+            pixel.fill(ORANGE)
+            payload = "payload7.txt"
+
         button1.update()
 
         button1Pushed = button1.fell
@@ -253,36 +240,16 @@ async def monitor_buttons(button1):
         if(button1Pushed):
             print("Button 1 pushed")
             button1Down = True
-        if(button1Released):
-            print("Button 1 released")
-            if(button1Down):
-                print("push and released")
 
         if(button1Released):
             if(button1Down):
                 # Run selected payload
-                payload = selectPayload()
                 print("Running ", payload)
                 runScript(payload)
-                print("Done")
+                #print("Done")
             button1Down = False
 
         await asyncio.sleep(0)
-
-
-
-progStatus = False
-progStatus = getProgrammingStatus()
-
-if(progStatus == False):
-    # not in setup mode, inject the payload
-    payload = selectPayload()
-    print("Running ", payload)
-    runScript(payload)
-
-    print("Done")
-else:
-    print("Update your payload")
 
 led_state = False
 
