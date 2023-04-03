@@ -50,7 +50,7 @@ This will prevent the pico-ducky from showing up as a USB drive when plugged int
 Remove the jumper and reconnect to your PC to reprogram.
 The default mode is USB mass storage enabled.   
 
-![USB enable/disable mode](images/usb-boot-mode.png)
+![USB enable/disable mode](images/rp2040-yd_usb_mode.jpg)
 
 ### Changing Keyboard Layouts
 
