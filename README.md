@@ -32,10 +32,12 @@ Install and have your USB Rubber Ducky working in less than 5 minutes.
 9. Copy `duckyinpython.py` as `code.py` to the root of your YD-RP2040, overwriting the previous file.  
      Linux: `cp duckyinpython.py </path/to/pico/code.py`
 
-10. Find a script [here](https://github.com/hak5/usbrubberducky-payloads) or [create your own one using Ducky Script](https://docs.hak5.org/hak5-usb-rubber-ducky/duckyscript-tm-quick-reference) and save it as `payload0.txt` in the Pico.
+10. Find a script [here](https://github.com/hak5/usbrubberducky-payloads) or [create your own one using Ducky Script](https://docs.hak5.org/hak5-usb-rubber-ducky/duckyscript-tm-quick-reference) and save it as `payload0.txt`, `payload1.txt`, `payload2.txt`, etc. on the YD-RP2040.
 
-11. Press the USR or Rotary Encoder button (whichever is defined) to deploy payload
+11. Rotate the rotary encoder to cycle through the various payloads and then press the USR or encoder button (whichever is defined) to deploy.
 
+### Connect a rotary encoder via GPIO pins 10, 11, and 12 as illustrated below:
+![Rotary Encoder](images/rp2040-yd_rotary.jpg)
 
 ### USB enable/disable mode
 
