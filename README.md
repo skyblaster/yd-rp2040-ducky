@@ -23,20 +23,18 @@ Install and have your USB Rubber Ducky working in less than 5 minutes.
 
 5. Download `adafruit-circuitpython-bundle-8.x-mpy-YYYYMMDD.zip` [here](https://github.com/adafruit/Adafruit_CircuitPython_Bundle/releases/latest) and extract it outside the device.
 
-6. Navigate to `lib` in the recently extracted folder and copy `adafruit_hid` to the `lib` folder on your Raspberry Pi Pico.
+6. Navigate to `lib` in the recently extracted folder and copy the `adafruit_hid` and `asyncio` folders to the `lib` folder on your YD-RP2040.
 
-7. Copy `adafruit_debouncer.mpy` and `adafruit_ticks.mpy` to the `lib` folder on your Raspberry Pi Pico.
+7. In addition to the above folders, copy `adafruit_debouncer.mpy`, `adafruit_ticks.mpy`, and `neopixel.mpy` files to the `lib` folder on your YD-RP2040.
 
-8. Copy `asyncio` to the `lib` folder on your Pico.
+8. Copy `boot.py` from this repository to the root of your YD-RP2040.
 
-9. Copy `boot.py` from your clone to the root of your Pico.
-
-10. Copy `duckyinpython.py` as `code.py` in the root of the Raspberry Pi Pico, overwriting the previous file.  
+9. Copy `duckyinpython.py` as `code.py` to the root of your YD-RP2040, overwriting the previous file.  
      Linux: `cp duckyinpython.py </path/to/pico/code.py`
 
-11. Find a script [here](https://github.com/hak5/usbrubberducky-payloads) or [create your own one using Ducky Script](https://docs.hak5.org/hak5-usb-rubber-ducky/duckyscript-tm-quick-reference) and save it as `payload0.txt` in the Pico.
+10. Find a script [here](https://github.com/hak5/usbrubberducky-payloads) or [create your own one using Ducky Script](https://docs.hak5.org/hak5-usb-rubber-ducky/duckyscript-tm-quick-reference) and save it as `payload0.txt` in the Pico.
 
-12. Press the USR or Rotary Encoder button (whichever is defined) to deploy payload
+11. Press the USR or Rotary Encoder button (whichever is defined) to deploy payload
 
 
 ### USB enable/disable mode
